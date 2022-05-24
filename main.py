@@ -43,13 +43,14 @@ def scrapy(kwen, st, count, api_key, total):
         description.append(f'{d_text} / {d_zh_text}')
         title.append(f'{t_text} / {t_zh_text}')
         href.append(article["full-text-retrieval-response"]['coredata']['link'][-1]['@href'])
-
+        print(f"    Title:{t_zh_text} / {t_text}")
+        print(f"    Description:{d_zh_text} / {d_text}")
     df = pd.DataFrame({
         'Title': title,
         'Description': description,
         'Href': href,
     })
-    df.to_csv('datas/data.csv', mode='a', index=False, header=False, encoding='utf_8')
+    df.to_csv('datas/data.csv', mode='a', index=False, header=False, encoding='utf-8-sig')
     print("Writing CSV...")
     total -= article_count
     st += count
@@ -68,6 +69,5 @@ if __name__ == '__main__':
     count = config['itemsPerPage']
     api_key = config['apikey']
     st = config['startIndex']
-
 
     scrapy(kwen=kwen, st=st, count=count, api_key=api_key, total=None)
