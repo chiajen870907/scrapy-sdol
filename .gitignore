@@ -6,6 +6,7 @@
 
 #datas
 datas/
+test.py
 
 # User-specific files
 *.rsuser
