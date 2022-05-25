@@ -1,12 +1,15 @@
+from translate import Translate
+from urllib.parse import quote
+
 import pandas as pd
 import googletrans
 import requests
 import json
+import time
 
-from urllib.parse import quote
-
-translator = googletrans.Translator()
-
+# translator = googletrans.Translator()
+translator = Translate()
+# #translator = Translator(to_lang='zh')
 
 def scrapy(kwen, st, count, api_key, total):
     xml_to_json = {'Accept': 'application/json'}
@@ -28,7 +31,6 @@ def scrapy(kwen, st, count, api_key, total):
 
     description = []
     title = []
-    creator = []
     href = []
 
     for indx, link in enumerate(article_links):
@@ -38,10 +40,10 @@ def scrapy(kwen, st, count, api_key, total):
         article = json.loads(result2.text)
         d_text = article["full-text-retrieval-response"]["coredata"]["dc:description"]
         t_text = article["full-text-retrieval-response"]["coredata"]["dc:title"]
-        d_zh_text = translator.translate(d_text, dest='zh-tw').text
-        t_zh_text = translator.translate(t_text, dest='zh-tw').text
-        description.append(f'{d_text} / {d_zh_text}')
-        title.append(f'{t_text} / {t_zh_text}')
+        d_zh_text = translator.en2ch(d_text)
+        t_zh_text = translator.en2ch(t_text)
+        description.append(f'{d_zh_text} / {d_text}')
+        title.append(f'{t_zh_text} / {t_text}')
         href.append(article["full-text-retrieval-response"]['coredata']['link'][-1]['@href'])
         print(f"    Title:{t_zh_text} / {t_text}")
         print(f"    Description:{d_zh_text} / {d_text}")
@@ -50,7 +52,7 @@ def scrapy(kwen, st, count, api_key, total):
         'Description': description,
         'Href': href,
     })
-    df.to_csv('datas/data.csv', mode='a', index=False, header=False, encoding='utf-8-sig')
+    df.to_csv(f'datas/{config["search"]}_data.csv', mode='a', index=False, header=False, encoding='utf-8-sig')
     print("Writing CSV...")
     total -= article_count
     st += count
