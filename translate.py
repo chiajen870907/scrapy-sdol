@@ -29,19 +29,11 @@ class Translate(object):
                 &dt=t&ie=UTF-8&oe=UTF-8&clearbtn=1&otf=1&pc=1&srcrom=0&ssel=0&tsel=0&kc=2""", params=param)
 
         # 返回的结果为Json，解析为一个嵌套列表
-        # print(type(result))
-
-        # print(type(result.json()))
-        # print(len(result.json()))
         rst = ''
         for ii in range(0, len(result.json()[0]) - 1):
             rst = rst + result.json()[0][ii][0]
 
         return rst
-
-
-
-
 
 
 # 主程序
